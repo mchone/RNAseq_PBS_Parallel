@@ -1,0 +1,30 @@
+#!/bin/bash
+#PBS -N decp_aln
+#PBS -l nodes=1:ppn=1
+#PBS -l walltime=480:00:00
+#PBS -e errlog
+
+cd $PBS_O_WORKDIR
+ls *.gz |cut -d \_ -f 1 |sort -n |uniq >list
+
+for h in `cat list`
+do
+echo -e "#!/bin/bash\n#PBS -N hs_${h}_msu7\n#PBS -l nodes=1:ppn=2\n#PBS -l walltime=480:00:00\n#PBS -e log_hs_${h}_msu7\n" > hs_${h}_msu7.pbs
+echo "cd \$PBS_O_WORKDIR" >> hs_${h}_msu7.pbs
+echo -e "hisat2 -q -p 2 --fr --no-mixed --no-discordant -x ./refgenome/msu7 -1 ${h}_clean_R1.fq.gz -2 ${h}_clean_R2.fq.gz -S ${h}_msu7.sam" >>hs_${h}_msu7.pbs
+echo -e "samtools view -bS ${h}_msu7.sam > ${h}_msu7.bam" >>hs_${h}_msu7.pbs
+echo -e "samtools sort --threads 2 ${h}_msu7.bam >${h}_msu7.sorted.bam" >>hs_${h}_msu7.pbs
+echo -e "rm ${h}_msu7.sam">>hs_${h}_msu7.pbs
+echo -e "rm ${h}_msu7.bam">>hs_${h}_msu7.pbs
+echo -e "rm hs_${h}_msu7.o*">>hs_${h}_msu7.pbs
+echo -e "qsub st_${h}_msu7.pbs">>hs_${h}_msu7.pbs
+qsub hs_${h}_msu7.pbs
+
+echo -e "#!/bin/bash\n#PBS -N st_${h}_msu7\n#PBS -l nodes=1:ppn=2\n#PBS -l walltime=480:00:00\n#PBS -e log_st_${h}_msu7\n" > st_${h}_msu7.pbs
+echo "cd \$PBS_O_WORKDIR" >> st_${h}_msu7.pbs
+echo -e "stringtie ${h}_msu7.sorted.bam -p 2 -G ./refgenome/msu7.gff3 -o ${h}_msu7.gtf2 -b ${h}_msu7">>st_${h}_msu7.pbs
+echo -e "rm st_${h}_msu7.o*">>st_${h}_msu7.pbs
+done
+
+rm decp_aln.o*
+rm errlog

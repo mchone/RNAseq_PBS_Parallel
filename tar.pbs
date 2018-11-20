@@ -1,0 +1,9 @@
+#!/bin/bash
+#PBS -N tar
+#PBS -l nodes=1:ppn=1
+#PBS -l walltime=480:00:00
+#PBS -e errlog
+
+cd $PBS_O_WORKDIR
+
+tar -zcvf 265RNAseq_results.tar.gz msu7_pick C* W*

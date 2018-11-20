@@ -1,0 +1,4 @@
+1. 首先在refgenome文件夹中准备好基因组序列与注释文件，然后执行hisat2build.pbs。
+2. 将*_clean_R1.fq.gz和对应的*_clean_R2.fq.gz全部放于rrun.pbs目录下，若略有不同，注意修改rrun.pbs对应部分，id_300name和namechange_300.pbs提供了测序编号与原始编号的修改脚本。
+3. 运行rrun.pbs自动完成批量化的bowtie比对与stringtie统计。
+4. 通过run_catch.pbs完成结果提取。

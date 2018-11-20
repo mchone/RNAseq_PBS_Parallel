@@ -1,0 +1,11 @@
+#!/bin/bash
+#PBS -N pick_msu7
+#PBS -l nodes=1:ppn=1
+#PBS -l walltime=480:00:00
+#PBS -e errlog
+
+cd $PBS_O_WORKDIR
+
+perl catch_for_msu7.pl msu7_mRNA.gff3 msu7_pick
+sed -i '/^\s*$/d' msu7_pick
+sed -i 's/[ \t]*$//g' msu7_pick

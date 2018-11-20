@@ -1,0 +1,9 @@
+#!/bin/bash
+#PBS -N hisat2build
+#PBS -l nodes=1:ppn=1
+#PBS -l walltime=480:00:00
+#PBS -e errloghisat2build
+
+cd $PBS_O_WORKDIR
+
+hisat2-build msu7.fa msu7
