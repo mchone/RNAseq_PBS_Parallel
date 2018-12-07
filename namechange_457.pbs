@@ -6,12 +6,12 @@
 
 cd $PBS_O_WORKDIR
 
-ls *.gtf2 |cut -d \_ -f 1 |sort -n |uniq >list
+ls *.gtf2 |cut -d - -f 1 |sort -n |uniq >list
 for h in `cat list`
 do
- n=`grep "${h}:" id_300name`
+ n=`grep "${h}:" id_457name`
  p=`echo ${n} | cut -d ':' -f 1`
  c=`echo ${n} | cut -d ':' -f 2`
- mv ${h}_msu7 ${c}_msu7
- mv ${h}_msu7.gtf2 ${c}_msu7.gtf2
+ mv ${h}-*_msu7 ${c}_msu7
+ mv ${h}-*_msu7.gtf2 ${c}_msu7.gtf2
 done

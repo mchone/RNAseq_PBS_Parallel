@@ -11,7 +11,7 @@ for h in `cat list`
 do
 echo -e "#!/bin/bash\n#PBS -N hs_${h}_msu7\n#PBS -l nodes=1:ppn=2\n#PBS -l walltime=480:00:00\n#PBS -e log_hs_${h}_msu7\n" > hs_${h}_msu7.pbs
 echo "cd \$PBS_O_WORKDIR" >> hs_${h}_msu7.pbs
-echo -e "hisat2 -q -p 2 --fr --no-mixed --no-discordant -x ./refgenome/msu7 -1 ${h}_clean_R1.fq.gz -2 ${h}_clean_R2.fq.gz -S ${h}_msu7.sam" >>hs_${h}_msu7.pbs
+echo -e "hisat2 -q -p 2 --fr --rna-strandness RF --no-mixed --no-discordant -x ./refgenome/msu7 -1 ${h}_1.clean.fq.gz -2 ${h}_2.clean.fq.gz -S ${h}_msu7.sam" >>hs_${h}_msu7.pbs
 echo -e "samtools view -bS ${h}_msu7.sam > ${h}_msu7.bam" >>hs_${h}_msu7.pbs
 echo -e "samtools sort --threads 2 ${h}_msu7.bam >${h}_msu7.sorted.bam" >>hs_${h}_msu7.pbs
 echo -e "rm ${h}_msu7.sam">>hs_${h}_msu7.pbs
